@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingHorizontal="6.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:layout_gravity="center" android:layout_width="fill_parent" android:layout_height="fill_parent" layout="@layout/view_app_icon_helper" />
+</FrameLayout>

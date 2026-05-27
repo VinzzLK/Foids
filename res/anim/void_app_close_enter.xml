@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VoidLauncher: OxygenOS-style app close ENTER (launcher returning) -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fade in from dim -->
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="280" />
+    <!-- Pop back from pushed state: 1.05 -> 1.0 -->
+    <scale
+        android:fromXScale="1.05"
+        android:toXScale="1.0"
+        android:fromYScale="1.05"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="280" />
+</set>

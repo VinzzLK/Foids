@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VoidLauncher: OxygenOS-style app open ENTER (incoming app) -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:zAdjustment="top">
+    <!-- Fade in: 0 -> 1, quick start -->
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:interpolator="@android:interpolator/decelerate_cubic"
+        android:startOffset="20"
+        android:duration="280" />
+    <!-- Scale from center: 0.90 -> 1.0, no stretch, fixed pivot -->
+    <scale
+        android:fromXScale="0.90"
+        android:toXScale="1.0"
+        android:fromYScale="0.90"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:interpolator="@android:interpolator/decelerate_cubic"
+        android:duration="350" />
+</set>

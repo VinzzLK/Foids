@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VoidLauncher: Fragment open exit - push-back feel -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:duration="260"
+        android:valueFrom="1.0"
+        android:valueTo="0.0"
+        android:propertyName="alpha" />
+    <objectAnimator
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:duration="260"
+        android:valueFrom="1.0"
+        android:valueTo="1.05"
+        android:propertyName="scaleX" />
+    <objectAnimator
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:duration="260"
+        android:valueFrom="1.0"
+        android:valueTo="1.05"
+        android:propertyName="scaleY" />
+</set>

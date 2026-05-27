@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="64.0dip" android:paddingHorizontal="8.0dip" android:paddingVertical="10.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:layout_width="@dimen/app_icon_dev_helper_size" android:layout_height="@dimen/app_icon_dev_helper_size" layout="@layout/view_app_icon_helper" />
+    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" android:layout_marginStart="12.0dip">
+        <TextView android:textSize="15.0sp" android:textColor="#ff1f2028" android:ellipsize="end" android:id="@id/dev_app_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+        <TextView android:textSize="12.0sp" android:textColor="#99272834" android:ellipsize="middle" android:id="@id/dev_app_package" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+    </LinearLayout>
+    <CheckBox android:id="@id/dev_app_checkbox" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#ff404552" />
+</LinearLayout>

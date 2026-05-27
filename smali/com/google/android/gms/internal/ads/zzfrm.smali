@@ -1,0 +1,49 @@
+.class public final Lcom/google/android/gms/internal/ads/zzfrm;
+.super Ljava/lang/Object;
+.source "r8-map-id-d9727bc7e00235ac513a61fce9aaf2b7a3ad41c0941d80eeaba89f3cd6d3eec5"
+
+
+# static fields
+.field private static final zza:Lcom/google/android/gms/internal/ads/zzfrj;
+
+.field private static volatile zzb:Lcom/google/android/gms/internal/ads/zzfrj;
+
+
+# direct methods
+.method static constructor <clinit>()V
+    .locals 2
+
+    .line 1
+    new-instance v0, Lcom/google/android/gms/internal/ads/zzfrk;
+
+    .line 2
+    .line 3
+    const/4 v1, 0x0
+
+    .line 4
+    invoke-direct {v0, v1}, Lcom/google/android/gms/internal/ads/zzfrk;-><init>(Lcom/google/android/gms/internal/ads/zzfrl;)V
+
+    .line 5
+    .line 6
+    .line 7
+    sput-object v0, Lcom/google/android/gms/internal/ads/zzfrm;->zza:Lcom/google/android/gms/internal/ads/zzfrj;
+
+    .line 8
+    .line 9
+    sput-object v0, Lcom/google/android/gms/internal/ads/zzfrm;->zzb:Lcom/google/android/gms/internal/ads/zzfrj;
+
+    .line 10
+    .line 11
+    return-void
+.end method
+
+.method public static zza()Lcom/google/android/gms/internal/ads/zzfrj;
+    .locals 1
+
+    .line 1
+    sget-object v0, Lcom/google/android/gms/internal/ads/zzfrm;->zzb:Lcom/google/android/gms/internal/ads/zzfrj;
+
+    .line 2
+    .line 3
+    return-object v0
+.end method

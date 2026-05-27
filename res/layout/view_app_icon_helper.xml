@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:clipChildren="false" android:clipToPadding="false" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.anonlab.voidlauncher.feature.home.presentation.components.icons.MaskedIconImageView android:layout_gravity="center" android:id="@id/app_icon_image" android:layout_width="0.0dip" android:layout_height="0.0dip" android:scaleType="centerCrop" android:adjustViewBounds="true" android:clipToOutline="true" />
+    <com.anonlab.voidlauncher.feature.home.presentation.components.icons.EditModeCornerIndicator android:layout_gravity="center" android:id="@id/app_icon_edit_indicator" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="0.0dip" />
+    <FrameLayout android:layout_gravity="end|center|top" android:id="@id/app_icon_selection_badge" android:background="@drawable/bg_selection_badge_unselected" android:visibility="gone" android:layout_width="@dimen/app_icon_badge_size" android:layout_height="@dimen/app_icon_badge_size" android:layout_marginTop="@dimen/app_icon_badge_offset" android:foregroundGravity="center" android:layout_marginEnd="@dimen/app_icon_badge_offset">
+        <ImageView android:id="@id/app_icon_selection_badge_check" android:layout_width="@dimen/app_icon_badge_size" android:layout_height="@dimen/app_icon_badge_size" android:src="@drawable/ic_check_mark" android:tint="@android:color/darker_gray" />
+    </FrameLayout>
+</FrameLayout>

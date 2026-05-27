@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView android:id="@id/app_drawer_scroll_view" android:paddingTop="12.0dip" android:paddingBottom="0.0dip" android:scrollbars="none" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:fillViewport="true" android:fadeScrollbars="false" android:overScrollMode="always" android:paddingStart="10.0dip" android:paddingEnd="10.0dip">
+        <GridLayout android:id="@id/app_drawer_grid" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:useDefaultMargins="false" />
+    </ScrollView>
+</FrameLayout>

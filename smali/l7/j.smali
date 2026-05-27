@@ -1,0 +1,17 @@
+.class public final Ll7/j;
+.super Ljava/lang/Object;
+.source "r8-map-id-d9727bc7e00235ac513a61fce9aaf2b7a3ad41c0941d80eeaba89f3cd6d3eec5"
+
+
+# instance fields
+.field public a:Landroid/view/View;
+
+.field public b:Ljava/lang/String;
+
+.field public c:Ll7/w;
+
+.field public d:Landroid/view/WindowId;
+
+.field public e:Ll7/p;
+
+.field public f:Landroid/animation/Animator;

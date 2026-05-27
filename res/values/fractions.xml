@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <fraction name="app_icon_background_size_percent">150.0%</fraction>
+    <fraction name="app_icon_corner_radius_percent">26.999998%</fraction>
+    <fraction name="app_icon_foreground_size_percent">150.0%</fraction>
+    <fraction name="app_icon_view_size_percent">90.0%</fraction>
+</resources>

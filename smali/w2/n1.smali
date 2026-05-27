@@ -1,0 +1,48 @@
+.class public final Lw2/n1;
+.super Ljava/lang/Object;
+.source "r8-map-id-d9727bc7e00235ac513a61fce9aaf2b7a3ad41c0941d80eeaba89f3cd6d3eec5"
+
+# interfaces
+.implements Lti/g;
+.implements Lk3/h;
+
+
+# static fields
+.field public static final synthetic a:Lw2/n1;
+
+.field public static final b:Lw2/m2;
+
+
+# direct methods
+.method static synthetic constructor <clinit>()V
+    .locals 1
+
+    .line 1
+    new-instance v0, Lw2/n1;
+
+    .line 2
+    .line 3
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    .line 4
+    .line 5
+    .line 6
+    sput-object v0, Lw2/n1;->a:Lw2/n1;
+
+    .line 7
+    .line 8
+    new-instance v0, Lw2/m2;
+
+    .line 9
+    .line 10
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    .line 11
+    .line 12
+    .line 13
+    sput-object v0, Lw2/n1;->b:Lw2/m2;
+
+    .line 14
+    .line 15
+    return-void
+.end method

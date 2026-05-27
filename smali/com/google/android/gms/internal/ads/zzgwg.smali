@@ -1,0 +1,53 @@
+.class public final Lcom/google/android/gms/internal/ads/zzgwg;
+.super Ljava/lang/Object;
+.source "r8-map-id-d9727bc7e00235ac513a61fce9aaf2b7a3ad41c0941d80eeaba89f3cd6d3eec5"
+
+# interfaces
+.implements Lcom/google/android/gms/internal/ads/zzgwi;
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 0
+
+    .line 1
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    .line 2
+    .line 3
+    .line 4
+    return-void
+.end method
+
+
+# virtual methods
+.method public final bridge synthetic zza(Ljava/lang/String;Ljava/security/Provider;)Ljava/lang/Object;
+    .locals 0
+
+    .line 1
+    if-nez p2, :cond_0
+
+    .line 2
+    .line 3
+    invoke-static {p1}, Ljava/security/MessageDigest;->getInstance(Ljava/lang/String;)Ljava/security/MessageDigest;
+
+    .line 4
+    .line 5
+    .line 6
+    move-result-object p1
+
+    .line 7
+    return-object p1
+
+    .line 8
+    :cond_0
+    invoke-static {p1, p2}, Ljava/security/MessageDigest;->getInstance(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;
+
+    .line 9
+    .line 10
+    .line 11
+    move-result-object p1
+
+    .line 12
+    return-object p1
+.end method
