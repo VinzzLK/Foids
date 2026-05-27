@@ -15,19 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify apktool.yml exists (repo root = folder Voids)
+      - name: Verify apktool.yml exists
         run: |
           if [ ! -f "$GITHUB_WORKSPACE/apktool.yml" ]; then
             echo "ERROR: apktool.yml tidak ditemukan di root repo!"
-            echo "Pastikan file-file ini ada di root repo:"
-            echo "  apktool.yml"
-            echo "  AndroidManifest.xml"
-            echo "  smali/"
-            echo "  res/"
             ls -la "$GITHUB_WORKSPACE/"
             exit 1
           fi
-          echo "✅ apktool.yml ditemukan, siap build"
+          echo "✅ apktool.yml ditemukan"
           cat "$GITHUB_WORKSPACE/apktool.yml"
 
       - name: Set up Java 17
@@ -38,18 +33,19 @@ jobs:
 
       - name: Install apktool 2.9.3
         run: |
-          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O /usr/local/lib/apktool.jar
-          wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O /usr/local/bin/apktool
-          chmod +x /usr/local/bin/apktool
-          apktool --version
+          # Taruh di home dir - tidak perlu sudo/permission
+          mkdir -p "$HOME/apktool"
+          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar \
+            -O "$HOME/apktool/apktool.jar"
+          echo "✅ apktool.jar downloaded"
+          java -jar "$HOME/apktool/apktool.jar" --version
 
       - name: Build APK
         run: |
           mkdir -p "$GITHUB_WORKSPACE/dist"
 
-          # FIX: repo root langsung = folder decompiled APK
-          # jadi kasih full path GITHUB_WORKSPACE ke apktool b
-          apktool b "$GITHUB_WORKSPACE" \
+          # repo root = isi folder Voids langsung, jadi kasih GITHUB_WORKSPACE
+          java -jar "$HOME/apktool/apktool.jar" b "$GITHUB_WORKSPACE" \
             --output "$GITHUB_WORKSPACE/dist/Void_mod_unsigned.apk" \
             --use-aapt2
 
