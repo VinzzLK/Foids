@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java 17
@@ -19,45 +19,40 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Download apktool 2.9.3
+      - name: Install apktool 2.9.3
         run: |
-          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar \
-            -O apktool.jar
-          wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool \
-            -O apktool
-          chmod +x apktool
-          sudo mv apktool /usr/local/bin/apktool
-          sudo mv apktool.jar /usr/local/bin/apktool.jar
+          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O /usr/local/bin/apktool.jar
+          wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O /usr/local/bin/apktool
+          chmod +x /usr/local/bin/apktool
 
-      - name: Build APK with apktool
+      - name: Build APK
         run: |
           apktool b Voids \
             --use-aapt2 \
-            --output VoidMod-unsigned.apk \
-            --frame-path $HOME/.local/share/apktool/framework
+            --output VoidMod-unsigned.apk
 
-      - name: Generate debug keystore
+      - name: Setup build-tools path
         run: |
-          keytool -genkeypair \
-            -v \
-            -keystore debug.keystore \
-            -alias androiddebugkey \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass android \
-            -keypass android \
-            -dname "CN=Android Debug,O=Android,C=US"
+          BUILD_TOOLS=$(ls -1 $ANDROID_SDK_ROOT/build-tools | sort -V | tail -1)
+          echo "BUILD_TOOLS_PATH=$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS" >> $GITHUB_ENV
 
       - name: Zipalign
         run: |
-          ${ANDROID_SDK_ROOT}/build-tools/$(ls ${ANDROID_SDK_ROOT}/build-tools | sort -V | tail -1)/zipalign \
-            -v -p 4 VoidMod-unsigned.apk VoidMod-aligned.apk
+          ${{ env.BUILD_TOOLS_PATH }}/zipalign -v -p 4 VoidMod-unsigned.apk VoidMod-aligned.apk
+
+      - name: Generate debug keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Sign APK
         run: |
-          ${ANDROID_SDK_ROOT}/build-tools/$(ls ${ANDROID_SDK_ROOT}/build-tools | sort -V | tail -1)/apksigner \
-            sign \
+          ${{ env.BUILD_TOOLS_PATH }}/apksigner sign \
             --ks debug.keystore \
             --ks-key-alias androiddebugkey \
             --ks-pass pass:android \
@@ -65,12 +60,11 @@ jobs:
             --out VoidMod-signed.apk \
             VoidMod-aligned.apk
 
-      - name: Verify APK
+      - name: Verify
         run: |
-          ${ANDROID_SDK_ROOT}/build-tools/$(ls ${ANDROID_SDK_ROOT}/build-tools | sort -V | tail -1)/apksigner \
-            verify --verbose VoidMod-signed.apk
+          ${{ env.BUILD_TOOLS_PATH }}/apksigner verify --verbose VoidMod-signed.apk
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: VoidMod-${{ github.run_number }}
