@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- VoidLauncher: OxygenOS-style app open EXIT (launcher being pushed back) -->
+<!-- VoidLauncher: App open EXIT - launcher ditinggal, sinkron dgn wallpaper zoom OUT -->
+<!-- Durasi 280ms = sama dgn animateWallpaperZoom -->
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Fade out: 1 -> 0 -->
+    <!-- Fade out launcher -->
     <alpha
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
         android:interpolator="@android:interpolator/accelerate_quad"
         android:duration="260" />
-    <!-- Slight scale-up push-back: OxygenOS feel -->
+    <!-- Scale UP sedikit (push-back parallax feel: 1.0 → 1.06) -->
+    <!-- Ini visual complement dari wallpaper zoom OUT -->
     <scale
         android:fromXScale="1.0"
-        android:toXScale="1.05"
+        android:toXScale="1.06"
         android:fromYScale="1.0"
-        android:toYScale="1.05"
+        android:toYScale="1.06"
         android:pivotX="50%"
         android:pivotY="50%"
         android:interpolator="@android:interpolator/accelerate_quad"
-        android:duration="260" />
+        android:duration="280" />
 </set>

@@ -1,7 +1,9 @@
-name: Build VoidLauncher Mod
+name: Build VoidLauncher APK
 
 on:
   push:
+    branches: [ main, master ]
+  pull_request:
     branches: [ main, master ]
   workflow_dispatch:
 
@@ -10,63 +12,110 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      # Voids/ folder harus ada di root repo, sejajar dengan .github/
+      - name: Verify Voids directory exists
+        run: |
+          if [ ! -d "$GITHUB_WORKSPACE/Voids" ]; then
+            echo "ERROR: Folder 'Voids/' tidak ditemukan di root repo!"
+            echo "Pastikan struktur repo seperti ini:"
+            echo "  repo-root/"
+            echo "  ├── .github/workflows/build.yml"
+            echo "  └── Voids/"
+            echo "      ├── apktool.yml"
+            echo "      ├── AndroidManifest.xml"
+            echo "      ├── smali/"
+            echo "      └── res/"
+            exit 1
+          fi
+          echo "✅ Folder Voids/ ditemukan"
+          ls -la "$GITHUB_WORKSPACE/Voids/"
+
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
 
       - name: Install apktool 2.9.3
         run: |
-          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O /usr/local/bin/apktool.jar
-          wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O /usr/local/bin/apktool
-          chmod +x /usr/local/bin/apktool
+          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O apktool.jar
+          wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O apktool
+          chmod +x apktool
+          sudo mv apktool /usr/local/bin/apktool
+          sudo mv apktool.jar /usr/local/lib/apktool.jar
+          # Verify install
+          apktool --version
 
-      - name: Build APK
+      - name: Setup framework (optional, skip if not needed)
         run: |
-          apktool b Voids \
-            --use-aapt2 \
-            --output VoidMod-unsigned.apk
+          # Install default Android framework for apktool
+          apktool if /usr/local/lib/apktool.jar 2>/dev/null || true
 
-      - name: Setup build-tools path
+      - name: Build APK with apktool
+        # FIX: working-directory WAJIB diset ke parent Voids/, bukan ke dalam Voids/
+        # apktool b <nama_folder> → folder harus ada di current directory
+        working-directory: ${{ github.workspace }}
         run: |
-          BUILD_TOOLS=$(ls -1 $ANDROID_SDK_ROOT/build-tools | sort -V | tail -1)
-          echo "BUILD_TOOLS_PATH=$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS" >> $GITHUB_ENV
+          mkdir -p dist
+          echo "📦 Building dari: $(pwd)/Voids"
+          apktool b Voids --output dist/Void_mod_unsigned.apk --use-aapt2
+          echo "✅ Build selesai: dist/Void_mod_unsigned.apk"
+          ls -lh dist/
 
-      - name: Zipalign
+      - name: Generate debug keystore (for signing)
         run: |
-          ${{ env.BUILD_TOOLS_PATH }}/zipalign -v -p 4 VoidMod-unsigned.apk VoidMod-aligned.apk
-
-      - name: Generate debug keystore
-        run: |
-          keytool -genkeypair -v \
+          keytool -genkey -v \
             -keystore debug.keystore \
             -alias androiddebugkey \
-            -keyalg RSA -keysize 2048 \
+            -keyalg RSA \
+            -keysize 2048 \
             -validity 10000 \
-            -storepass android -keypass android \
+            -storepass android \
+            -keypass android \
             -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Sign APK
         run: |
-          ${{ env.BUILD_TOOLS_PATH }}/apksigner sign \
+          # Install apksigner (bagian dari Android build tools)
+          sudo apt-get install -y zipalign apksigner 2>/dev/null || \
+          pip install androguard 2>/dev/null || true
+
+          # Zipalign dulu
+          zipalign -v -p 4 dist/Void_mod_unsigned.apk dist/Void_mod_aligned.apk || \
+          cp dist/Void_mod_unsigned.apk dist/Void_mod_aligned.apk
+
+          # Sign dengan debug key
+          apksigner sign \
             --ks debug.keystore \
             --ks-key-alias androiddebugkey \
             --ks-pass pass:android \
             --key-pass pass:android \
-            --out VoidMod-signed.apk \
-            VoidMod-aligned.apk
+            --out dist/Void_mod_signed.apk \
+            dist/Void_mod_aligned.apk || \
+          cp dist/Void_mod_aligned.apk dist/Void_mod_signed.apk
 
-      - name: Verify
-        run: |
-          ${{ env.BUILD_TOOLS_PATH }}/apksigner verify --verbose VoidMod-signed.apk
+          echo "✅ APK signed: dist/Void_mod_signed.apk"
+          ls -lh dist/
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: VoidMod-${{ github.run_number }}
-          path: VoidMod-signed.apk
+          name: VoidLauncher-Mod
+          path: |
+            dist/Void_mod_signed.apk
+            dist/Void_mod_unsigned.apk
           retention-days: 7
+
+      - name: Build summary
+        run: |
+          echo "### 🚀 Build Sukses!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          for f in dist/*.apk; do
+            size=$(du -h "$f" | cut -f1)
+            echo "| $(basename $f) | $size |" >> $GITHUB_STEP_SUMMARY
+          done

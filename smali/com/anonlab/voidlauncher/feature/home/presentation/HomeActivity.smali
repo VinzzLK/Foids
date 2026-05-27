@@ -10,6 +10,10 @@
 # instance fields
 .field public final M:Ltj/r0;
 
+# VoidParallax: animator untuk wallpaper zoom in/out smooth & sinkron
+.field private wallpaperZoomAnimator:Landroid/animation/ValueAnimator;
+.field private wallpaperZoomListener:Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;
+
 
 # direct methods
 .method public constructor <init>()V
@@ -463,5 +467,140 @@
     .line 202
     .line 203
     .line 204
+    return-void
+.end method
+
+
+# VoidParallax: Wallpaper zoom IN saat launcher muncul kembali
+.method public onResume()V
+    .locals 1
+
+    invoke-super {p0}, Lc/m;->onResume()V
+
+    const/4 v0, 0x0
+    invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+
+    return-void
+.end method
+
+
+# VoidParallax: Wallpaper zoom OUT saat app dibuka (launcher ke background)
+.method public onPause()V
+    .locals 1
+
+    const v0, 0x3f800000
+    invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+
+    invoke-super {p0}, Lc/m;->onPause()V
+
+    return-void
+.end method
+
+
+# VoidParallax: onWindowFocusChanged - sinkron tepat dgn awal/akhir transisi window
+.method public onWindowFocusChanged(Z)V
+    .locals 2
+
+    invoke-super {p0, p1}, Lc/m;->onWindowFocusChanged(Z)V
+
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+    const/16 v1, 0x1e
+    if-lt v0, v1, :cond_skip_focus
+
+    if-eqz p1, :cond_focus_lost
+
+    const/4 v0, 0x0
+    invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+    goto :cond_skip_focus
+
+    :cond_focus_lost
+    const v0, 0x3f800000
+    invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+
+    :cond_skip_focus
+    return-void
+.end method
+
+
+# VoidParallax: Core helper - jalankan ValueAnimator wallpaper zoom smooth 280ms
+# targetZoom: 0.0 = wallpaper normal/dekat (launcher depan)
+#              1.0 = wallpaper menjauh (app di depan)
+.method private animateWallpaperZoom(F)V
+    .locals 7
+
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+    const/16 v1, 0x1e
+    if-lt v0, v1, :cond_end
+
+    invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
+    move-result-object v0
+    if-eqz v0, :cond_end
+
+    iget-object v1, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->wallpaperZoomAnimator:Landroid/animation/ValueAnimator;
+    if-eqz v1, :cond_new_anim
+    invoke-virtual {v1}, Landroid/animation/ValueAnimator;->cancel()V
+
+    :cond_new_anim
+    const/4 v1, 0x2
+    new-array v1, v1, [F
+
+    const v2, 0x3f800000
+    cmpl-float v3, p1, v2
+    if-eqz v3, :cond_zoom_out
+
+    const v4, 0x3f800000
+    const/4 v3, 0x0
+    aput v4, v1, v3
+    const/4 v3, 0x1
+    aput p1, v1, v3
+    goto :cond_start_anim
+
+    :cond_zoom_out
+    const/4 v4, 0x0
+    const/4 v3, 0x0
+    aput v4, v1, v3
+    const/4 v3, 0x1
+    aput p1, v1, v3
+
+    :cond_start_anim
+    invoke-static {v1}, Landroid/animation/ValueAnimator;->ofFloat([F)Landroid/animation/ValueAnimator;
+    move-result-object v1
+
+    const/16 v2, 0x118
+    int-to-long v2, v2
+    invoke-virtual {v1, v2, v3}, Landroid/animation/ValueAnimator;->setDuration(J)Landroid/animation/ValueAnimator;
+    move-result-object v3
+
+    const v4, 0x3f800000
+    cmpl-float v5, p1, v4
+    if-eqz v5, :cond_accel
+
+    new-instance v4, Landroid/view/animation/DecelerateInterpolator;
+    const v5, 0x40000000
+    invoke-direct {v4, v5}, Landroid/view/animation/DecelerateInterpolator;-><init>(F)V
+    goto :cond_set_interp
+
+    :cond_accel
+    new-instance v4, Landroid/view/animation/AccelerateInterpolator;
+    invoke-direct {v4}, Landroid/view/animation/AccelerateInterpolator;-><init>()V
+
+    :cond_set_interp
+    invoke-virtual {v3, v4}, Landroid/animation/ValueAnimator;->setInterpolator(Landroid/animation/TimeInterpolator;)V
+
+    iget-object v4, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->wallpaperZoomListener:Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;
+    if-nez v4, :cond_has_listener
+
+    new-instance v4, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;
+    invoke-direct {v4, p0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;-><init>(Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;)V
+    iput-object v4, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->wallpaperZoomListener:Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;
+
+    :cond_has_listener
+    invoke-virtual {v3, v4}, Landroid/animation/ValueAnimator;->addUpdateListener(Landroid/animation/ValueAnimator$AnimatorUpdateListener;)V
+
+    iput-object v3, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->wallpaperZoomAnimator:Landroid/animation/ValueAnimator;
+
+    invoke-virtual {v3}, Landroid/animation/ValueAnimator;->start()V
+
+    :cond_end
     return-void
 .end method
