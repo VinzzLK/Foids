@@ -135,6 +135,8 @@
 
     # === VOID PATCH: Gesture exclusion rects (Android 10+ / API 29+) ===
     # Clears gesture exclusion so HyperOS/MIUI gesture nav works on Poco F3
+    # FIX: reload SDK_INT — v0 di sini punya Conflict type (int|Window) setelah cond_1
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
     const/16 v1, 0x1d
     if-lt v0, v1, :skip_gesture_patch
 
