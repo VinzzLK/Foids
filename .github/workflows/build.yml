@@ -31,7 +31,7 @@ jobs:
 
       - name: Build APK with apktool
         run: |
-          apktool b Void \
+          apktool b Voids \
             --use-aapt2 \
             --output VoidMod-unsigned.apk \
             --frame-path $HOME/.local/share/apktool/framework
