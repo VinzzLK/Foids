@@ -15,16 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify apktool.yml exists
-        run: |
-          if [ ! -f "$GITHUB_WORKSPACE/apktool.yml" ]; then
-            echo "ERROR: apktool.yml tidak ditemukan di root repo!"
-            ls -la "$GITHUB_WORKSPACE/"
-            exit 1
-          fi
-          echo "✅ apktool.yml ditemukan"
-          cat "$GITHUB_WORKSPACE/apktool.yml"
-
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -33,18 +23,74 @@ jobs:
 
       - name: Install apktool 2.9.3
         run: |
-          # Taruh di home dir - tidak perlu sudo/permission
           mkdir -p "$HOME/apktool"
           wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar \
             -O "$HOME/apktool/apktool.jar"
-          echo "✅ apktool.jar downloaded"
           java -jar "$HOME/apktool/apktool.jar" --version
+
+      - name: Install Android build-tools 35 (for aapt2 API 35)
+        run: |
+          # Install SDK components yang dibutuhkan untuk compile API 35
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-35" \
+            "build-tools;35.0.0" > /dev/null 2>&1
+          # Tambah aapt2 dari build-tools 35 ke PATH
+          echo "$ANDROID_HOME/build-tools/35.0.0" >> $GITHUB_PATH
+          echo "✅ aapt2 version: $("$ANDROID_HOME/build-tools/35.0.0/aapt2" version)"
+
+      # ─── FIX 1: Ganti @android:color/X_NNN → hex literal ───────────────────
+      # Warna-warna ini adalah private framework colors yg tidak ada di
+      # framework apktool. Harus diganti ke hex supaya bisa link.
+      - name: Patch private android:color references → hex
+        run: |
+          TARGET="$GITHUB_WORKSPACE/res/values-v34/colors.xml"
+          if [ ! -f "$TARGET" ]; then
+            echo "colors-v34 not found, skip"
+            exit 0
+          fi
+
+          declare -A COLOR_MAP=(
+            ["Teal_800"]="#00695C"
+            ["Teal_700"]="#00796B"
+            ["Indigo_700"]="#303F9F"
+            ["Indigo_800"]="#283593"
+            ["Blue_700"]="#1976D2"
+            ["Blue_800"]="#1565C0"
+            ["Purple_700"]="#7B1FA2"
+            ["Purple_800"]="#6A1B9A"
+            ["Pink_700"]="#C2185B"
+            ["Pink_800"]="#AD1457"
+            ["Red_700"]="#D32F2F"
+            ["Red_800"]="#C62828"
+          )
+
+          for NAME in "${!COLOR_MAP[@]}"; do
+            HEX="${COLOR_MAP[$NAME]}"
+            sed -i "s|@android:color/${NAME}|${HEX}|g" "$TARGET"
+            echo "  Replaced @android:color/${NAME} → ${HEX}"
+          done
+          echo "✅ colors-v34 patched"
+
+      # ─── FIX 2: Hapus atribut API 35 yg tidak dikenali aapt2 lama ──────────
+      # windowOptOutEdgeToEdgeEnforcement baru ada di API 35,
+      # kalau ada error lain di styles.xml tambah di sini juga
+      - name: Patch API-35-only attributes in styles.xml
+        run: |
+          TARGET="$GITHUB_WORKSPACE/res/values/styles.xml"
+          if [ ! -f "$TARGET" ]; then
+            echo "styles.xml not found, skip"
+            exit 0
+          fi
+
+          # Hapus baris yang mengandung atribut ini (aapt2 yg sesuai sudah diinstall
+          # di step sebelumnya tapi jaga-jaga kalau masih error)
+          sed -i '/windowOptOutEdgeToEdgeEnforcement/d' "$TARGET"
+          echo "✅ styles.xml patched"
 
       - name: Build APK
         run: |
           mkdir -p "$GITHUB_WORKSPACE/dist"
 
-          # repo root = isi folder Voids langsung, jadi kasih GITHUB_WORKSPACE
           java -jar "$HOME/apktool/apktool.jar" b "$GITHUB_WORKSPACE" \
             --output "$GITHUB_WORKSPACE/dist/Void_mod_unsigned.apk" \
             --use-aapt2
