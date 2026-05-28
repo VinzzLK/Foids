@@ -391,7 +391,63 @@
     .line 174
     goto/16 :goto_0
 
-    .line 175
+    # ── FAKE PARALLAX SPEED SLIDERS ──────────────────────────
+    # Index 6: Parallax Wallpaper Zoom In Speed
+    :pswitch_6
+    iget-object v0, p0, Llb/d1;->c:Lf1/f1;
+    invoke-virtual {v0, p1}, Lf1/f1;->h(F)V
+    iget-object v0, p0, Llb/d1;->b:Llb/g;
+    iget-object v0, v0, Llb/g;->a:Landroid/content/SharedPreferences;
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "vp_wallpaper_zoom_in_speed"
+    invoke-interface {v0, v1, p1}, Landroid/content/SharedPreferences$Editor;->putFloat(Ljava/lang/String;F)Landroid/content/SharedPreferences$Editor;
+    move-result-object p1
+    invoke-interface {p1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    goto/16 :goto_0
+
+    # Index 7: Parallax Wallpaper Zoom Out Speed
+    :pswitch_7
+    iget-object v0, p0, Llb/d1;->c:Lf1/f1;
+    invoke-virtual {v0, p1}, Lf1/f1;->h(F)V
+    iget-object v0, p0, Llb/d1;->b:Llb/g;
+    iget-object v0, v0, Llb/g;->a:Landroid/content/SharedPreferences;
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "vp_wallpaper_zoom_out_speed"
+    invoke-interface {v0, v1, p1}, Landroid/content/SharedPreferences$Editor;->putFloat(Ljava/lang/String;F)Landroid/content/SharedPreferences$Editor;
+    move-result-object p1
+    invoke-interface {p1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    goto/16 :goto_0
+
+    # Index 8: App Drawer Zoom In Speed (returning home)
+    :pswitch_8
+    iget-object v0, p0, Llb/d1;->c:Lf1/f1;
+    invoke-virtual {v0, p1}, Lf1/f1;->h(F)V
+    iget-object v0, p0, Llb/d1;->b:Llb/g;
+    iget-object v0, v0, Llb/g;->a:Landroid/content/SharedPreferences;
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "vp_drawer_zoom_in_speed"
+    invoke-interface {v0, v1, p1}, Landroid/content/SharedPreferences$Editor;->putFloat(Ljava/lang/String;F)Landroid/content/SharedPreferences$Editor;
+    move-result-object p1
+    invoke-interface {p1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    goto/16 :goto_0
+
+    # Index 9: App Drawer Zoom Out Speed (opening app)
+    :pswitch_9
+    iget-object v0, p0, Llb/d1;->c:Lf1/f1;
+    invoke-virtual {v0, p1}, Lf1/f1;->h(F)V
+    iget-object v0, p0, Llb/d1;->b:Llb/g;
+    iget-object v0, v0, Llb/g;->a:Landroid/content/SharedPreferences;
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "vp_drawer_zoom_out_speed"
+    invoke-interface {v0, v1, p1}, Landroid/content/SharedPreferences$Editor;->putFloat(Ljava/lang/String;F)Landroid/content/SharedPreferences$Editor;
+    move-result-object p1
+    invoke-interface {p1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    goto/16 :goto_0
+
     .line 176
     nop
 
@@ -404,5 +460,9 @@
         :pswitch_2
         :pswitch_1
         :pswitch_0
+        :pswitch_6
+        :pswitch_7
+        :pswitch_8
+        :pswitch_9
     .end packed-switch
 .end method

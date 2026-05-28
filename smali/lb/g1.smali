@@ -370,6 +370,14 @@
     .line 170
     return-object v4
 
+    # === VOID PATCH: Parallax Settings navigation ===
+    :pswitch_10
+    new-instance v0, Landroid/content/Intent;
+    const-class v1, Lcom/anonlab/voidlauncher/feature/home/presentation/settings/ParallaxSettingsActivity;
+    invoke-direct {v0, v5, v1}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+    invoke-virtual {v5, v0}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
+    return-object v4
+
     .line 171
     :pswitch_data_0
     .packed-switch 0x0
@@ -383,5 +391,6 @@
         :pswitch_2
         :pswitch_1
         :pswitch_0
+        :pswitch_10
     .end packed-switch
 .end method

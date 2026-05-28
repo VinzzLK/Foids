@@ -10,6 +10,8 @@
 
 .field public static final enum C:Llb/r3;
 
+.field public static final enum N:Llb/r3;
+
 .field public static final synthetic D:[Llb/r3;
 
 .field public static final synthetic E:Lwi/b;
@@ -33,7 +35,7 @@
 
 # direct methods
 .method static constructor <clinit>()V
-    .locals 11
+    .locals 12
 
     .line 1
     new-instance v0, Llb/r3;
@@ -226,9 +228,17 @@
     .line 95
     sput-object v7, Llb/r3;->C:Llb/r3;
 
+    # === VOID PATCH: Parallax Settings screen entry ===
+    new-instance v8, Llb/r3;
+    const/16 v9, 0x8
+    const-string v10, "parallax_settings"
+    const-string v11, "PARALLAX_SETTINGS"
+    invoke-direct {v8, v11, v9, v10}, Llb/r3;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    sput-object v8, Llb/r3;->N:Llb/r3;
+
     .line 96
     .line 97
-    filled-new-array/range {v0 .. v7}, [Llb/r3;
+    filled-new-array/range {v0 .. v8}, [Llb/r3;
 
     .line 98
     .line 99

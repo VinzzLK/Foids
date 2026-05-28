@@ -209,5 +209,6 @@ We will share more once you're back online."</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
+    <string name="parallax_settings_title">Parallax Settings</string>
     <string name="watermark_label_prefix">"AdMob - "</string>
 </resources>

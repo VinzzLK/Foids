@@ -14,6 +14,9 @@
 .field private wallpaperZoomAnimator:Landroid/animation/ValueAnimator;
 .field private wallpaperZoomListener:Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity$WallpaperZoomListener;
 
+# FakeParallax: fake wallpaper overlay + app drawer zoom controller
+.field private parallaxController:Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;
+
 
 # direct methods
 .method public constructor <init>()V
@@ -158,6 +161,13 @@
     invoke-virtual {v1, v3}, Landroid/view/View;->setSystemGestureExclusionRects(Ljava/util/List;)V
 
     :skip_gesture_patch
+
+    # === FAKE PARALLAX INIT ===
+    # Buat ParallaxController setelah window siap — overlay butuh decor view
+    # Post ke handler supaya Compose selesai setContentView dulu
+    new-instance v0, Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;
+    invoke-direct {v0, p0}, Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;-><init>(Landroid/app/Activity;)V
+    iput-object v0, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->parallaxController:Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;
 
     sget-object v0, Lnb/o;->a:Lnb/o;
 
@@ -511,13 +521,25 @@
 
     if-eqz p1, :cond_focus_lost
 
+    # Focus gained = returning from app
     const/4 v0, 0x0
     invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+
+    # FakeParallax: drawer zoom IN + wallpaper zoom OUT
+    iget-object v0, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->parallaxController:Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;
+    if-eqz v0, :cond_skip_focus
+    invoke-virtual {v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;->onAppClose()V
     goto :cond_skip_focus
 
     :cond_focus_lost
+    # Focus lost = app is opening
     const v0, 0x3f800000
     invoke-direct {p0, v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->animateWallpaperZoom(F)V
+
+    # FakeParallax: drawer zoom OUT + wallpaper zoom IN
+    iget-object v0, p0, Lcom/anonlab/voidlauncher/feature/home/presentation/HomeActivity;->parallaxController:Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;
+    if-eqz v0, :cond_skip_focus
+    invoke-virtual {v0}, Lcom/anonlab/voidlauncher/feature/home/presentation/ParallaxController;->onAppOpen()V
 
     :cond_skip_focus
     return-void

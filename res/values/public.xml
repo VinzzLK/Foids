@@ -5309,4 +5309,15 @@
     <public type="xml" name="image_share_filepaths" id="0x7f150004" />
     <public type="xml" name="m3_button_group_child_size_change" id="0x7f150005" />
     <public type="xml" name="m3_split_button_inner_corner_size_state_list" id="0x7f150006" />
+    <public type="layout" name="activity_parallax_settings" id="0x7f0d0079" />
+    <public type="id" name="sb_wp_zoom_in" id="0x7f0a023d" />
+    <public type="id" name="sb_wp_zoom_out" id="0x7f0a023e" />
+    <public type="id" name="sb_dr_zoom_in" id="0x7f0a023f" />
+    <public type="id" name="sb_dr_zoom_out" id="0x7f0a0240" />
+    <public type="id" name="tv_wp_zoom_in_val" id="0x7f0a0241" />
+    <public type="id" name="tv_wp_zoom_out_val" id="0x7f0a0242" />
+    <public type="id" name="tv_dr_zoom_in_val" id="0x7f0a0243" />
+    <public type="id" name="tv_dr_zoom_out_val" id="0x7f0a0244" />
+    <public type="id" name="btn_parallax_reset" id="0x7f0a0245" />
+    <public type="string" name="parallax_settings_title" id="0x7f120146" />
 </resources>

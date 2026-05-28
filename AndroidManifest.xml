@@ -79,6 +79,7 @@
         <activity android:exported="false" android:name="com.anonlab.voidlauncher.feature.home.presentation.rain.RainPlaygroundActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize"/>
         <activity android:exported="false" android:name="com.anonlab.voidlauncher.feature.home.presentation.wallpaper.WallpaperSelectorActivity" android:screenOrientation="portrait"/>
         <activity android:exported="false" android:name="com.anonlab.voidlauncher.feature.home.presentation.settings.UpdateScreenActivity" android:screenOrientation="portrait"/>
+        <activity android:exported="false" android:name="com.anonlab.voidlauncher.feature.home.presentation.settings.ParallaxSettingsActivity" android:screenOrientation="portrait" android:theme="@style/Theme.VoidLauncherRecode"/>
         <activity android:exported="false" android:name="com.anonlab.voidlauncher.feature.home.pro.ProUpgradeActivity" android:screenOrientation="portrait"/>
         <meta-data android:name="com.google.android.play.billingclient.version" android:value="7.1.1"/>
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:exported="false" android:name="com.android.billingclient.api.ProxyBillingActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
